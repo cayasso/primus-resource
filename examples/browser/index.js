@@ -23,14 +23,25 @@ Creature.prototype.onmessage = function (spark, message, fn) {
 };
 
 
-Creature.prototype.construct = function (something, here) {
-	console.log('HOOOOLA', something);
+Creature.prototype.construct = function () {
+  console.log(arguments);
 };
 
-Creature('hola');
-primus.resource('creature', Creature);
+Creature('Dog');
 
 
+var Blog = primus.resource('blog');
+
+Blog.prototype.onpost = function (spark, data, fn) {
+  console.log('Message is', data);
+  fn('Post created');
+};
+
+Blog.prototype.construct = function (name) {
+  this.name = name;
+};
+
+Blog('My blog');
 
 // Start server listening
 server.listen(process.env.PORT || 8081, function(){

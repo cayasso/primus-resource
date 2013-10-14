@@ -13,8 +13,18 @@
   <script>
     var primus = new Primus('http://localhost:8081/');
     var creature = primus.resource('creature');
+    var blog = primus.resource('blog');
+
+    // creature resource
     creature.ready(function () {
       creature.message('hi', function (res) {
+        console.log(res);
+      });
+    });
+
+    // blog resource
+    blog.ready(function () {
+      blog.post({ id: 123456, title: 'My first post'}, function (res) {
         console.log(res);
       });
     });
