@@ -152,7 +152,7 @@ describe('primus-resource', function (){
     };
     srv.listen(function(){
       var creature = Creature();
-      expect(creature.name).to.be('creature');
+      expect(creature.resourceName).to.be('creature');
       done();
     });
   });
