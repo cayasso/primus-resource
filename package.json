@@ -1,0 +1,42 @@
+{
+  "name": "primus-resource",
+  "version": "1.1.0",
+  "description": "Primus.IO makes working with Primus a little slicker.",
+  "author": "Jonathan Brumley <cayasso@gmail.com>",
+  "homepage": "https://github.com/cayasso/primus-resource",
+  "main": "index.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cayasso/primus-resource.git"
+  },
+  "keywords": [
+    "ws",
+    "rpc",
+    "resource",
+    "remote",
+    "channels",
+    "realtime",
+    "websocket",
+    "engine.io",
+    "socket.io",
+    "plugin",
+    "sockjs",
+    "browserchannel",
+    "primus"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "load": "1.0.x"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "expect.js": "*",
+    "ws": "~0.4.27",
+    "primus": "~1.x.x",
+    "primus-multiplex": "1.x.x",
+    "primus-emitter": "1.x.x"
+  }
+}

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Primus</title>
+  <script src="/primus/primus.js"></script>
+</head>
+<body>
+  <h1>
+    Welcome to Primus.IO demo.
+  </h2>
+
+  <script>
+    var primus = new Primus('http://localhost:8081/');
+    var creature = primus.resource('creature');
+    creature.ready(function () {
+      creature.message('hi', function (res) {
+        console.log(res);
+      });
+    });
+    
+  </script>
+<body>
+</html>
