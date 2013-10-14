@@ -1,6 +1,6 @@
 {
   "name": "primus-resource",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Define resources with auto-binded methods that can be called remotely on top of Primus.",
   "author": "Jonathan Brumley <cayasso@gmail.com>",
   "homepage": "https://github.com/cayasso/primus-resource",
