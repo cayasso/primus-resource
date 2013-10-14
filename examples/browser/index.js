@@ -22,7 +22,15 @@ Creature.prototype.onmessage = function (spark, message, fn) {
   fn('Message received');
 };
 
-Creature();
+
+Creature.prototype.construct = function (something, here) {
+	console.log('HOOOOLA', something);
+};
+
+Creature('hola');
+primus.resource('creature', Creature);
+
+
 
 // Start server listening
 server.listen(process.env.PORT || 8081, function(){
