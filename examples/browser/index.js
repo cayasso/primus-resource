@@ -15,8 +15,11 @@ primus.use('multiplex', 'primus-multiplex');
 primus.use('emitter', 'primus-emitter');
 primus.use('resource', resource);
 
-var Creature = primus.resource('creature');
 
+
+function Creature() {
+  this.name = 'test';
+}
 Creature.prototype.onmessage = function (spark, message, fn) {
   console.log('Message is', message);
   fn('Message received');
@@ -24,10 +27,12 @@ Creature.prototype.onmessage = function (spark, message, fn) {
 
 
 Creature.prototype.construct = function () {
-  console.log(arguments);
+  console.log('CONSTRUCT', arguments);
 };
 
-Creature('Dog');
+Creature = primus.resource('creature', Creature);
+
+new Creature('Dog');
 
 
 var Blog = primus.resource('blog');
@@ -39,9 +44,10 @@ Blog.prototype.onpost = function (spark, data, fn) {
 
 Blog.prototype.construct = function (name) {
   this.name = name;
+  console.log('CONSTRUCT', arguments);
 };
 
-Blog('My blog');
+new Blog('My blog');
 
 // Start server listening
 server.listen(process.env.PORT || 8081, function(){

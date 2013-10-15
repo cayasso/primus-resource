@@ -78,7 +78,7 @@ Creature.prototype.onwalk = function (spark, fn) {
 };
 
 // Initialize our resource
-Creature();
+var creature = new Creature();
 
 server.listen(8080);
 ```
@@ -115,7 +115,7 @@ creature.ready(function () {
 
 ## Run tests
 
-``` bash
+```bash
 $ make test
 ```
 

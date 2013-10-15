@@ -74,7 +74,8 @@ describe('primus-resource', function (){
     
 
     srv.listen(function(){
-      primus.resource('creature')();
+      var Creature = primus.resource('creature');
+      new Creature();
     });
 
     var cl = client(srv, primus);
@@ -94,7 +95,7 @@ describe('primus-resource', function (){
     };
 
     srv.listen(function(){
-      Creature();
+      var creature = new Creature();
     });
 
     var cl = client(srv, primus);
@@ -116,7 +117,7 @@ describe('primus-resource', function (){
       done();
     };
     srv.listen(function(){
-      Creature();
+      var creature = new Creature();
     });
     var cl = client(srv, primus);
     var creature = cl.resource('creature');
@@ -133,7 +134,9 @@ describe('primus-resource', function (){
       expect(this.channel).to.be.a(primus.$.Multiplex.Channel);
       done();
     };
-    srv.listen(Creature);
+    srv.listen(function () {
+      var creature = new Creature();
+    });
     var cl = client(srv, primus);
     var creature = cl.resource('creature');
     creature.ready(function(){
@@ -151,7 +154,7 @@ describe('primus-resource', function (){
       done();
     };
     srv.listen(function(){
-      var creature = Creature();
+      var creature = new Creature();
       expect(creature.resourceName).to.be('creature');
       done();
     });
