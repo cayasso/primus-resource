@@ -15,39 +15,24 @@ primus.use('multiplex', 'primus-multiplex');
 primus.use('emitter', 'primus-emitter');
 primus.use('resource', resource);
 
+var creature = primus.resource('creature');
 
-
-function Creature() {
-  this.name = 'test';
-}
-Creature.prototype.onmessage = function (spark, message, fn) {
+creature.onmessage = function (spark, message, fn) {
   console.log('Message is', message);
   fn('Message received');
 };
 
 
-Creature.prototype.construct = function () {
-  console.log('CONSTRUCT', arguments);
-};
-
-Creature = primus.resource('creature', Creature);
-
-new Creature('Dog');
-
-
-var Blog = primus.resource('blog');
+function Blog(title) {
+  this.name = title;
+}
 
 Blog.prototype.onpost = function (spark, data, fn) {
   console.log('Message is', data);
   fn('Post created');
 };
 
-Blog.prototype.construct = function (name) {
-  this.name = name;
-  console.log('CONSTRUCT', arguments);
-};
-
-new Blog('My blog');
+primus.resource('blog', new Blog('My blog'));
 
 // Start server listening
 server.listen(process.env.PORT || 8081, function(){
