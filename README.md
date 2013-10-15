@@ -64,7 +64,7 @@ Then create a resource like this:
 
 ```javascript
 // Defining a resource
-var Creature = primus.resource('creature');
+function Creature() {}
 
 Creature.prototype.oncommand = function (spark, command, fn) {
   console.log(command);
@@ -78,7 +78,54 @@ Creature.prototype.onwalk = function (spark, fn) {
 };
 
 // Initialize our resource
-var creature = new Creature();
+primus.resource('creature', new Creature());
+
+server.listen(8080);
+```
+
+You can also create a resource like this:
+
+```javascript
+
+// Create our resource
+var Creature = primus.resource('creature');
+
+Creature.oncommand = function (spark, command, fn) {
+  console.log(command);
+  fn('Creature just got command: ' + command);
+};
+
+Creature.onwalk = function (spark, fn) {
+  // make the creature walk with some code
+  console.log('walk');
+  fn('Creature started to walk');
+};
+
+server.listen(8080);
+```
+
+Or like this by passing the object directly to the resource method:
+
+```javascript
+
+// Create our resource
+var Creature = {
+  
+  oncommand: function (spark, command, fn) {
+    console.log(command);
+    fn('Creature just got command: ' + command);
+  },
+
+  onwalk: function (spark, fn) {
+    // make the creature walk with some code
+    console.log('walk');
+    fn('Creature started to walk');
+  }
+
+};
+
+// Initialize resource
+primus.resource('creature', Creature);
 
 server.listen(8080);
 ```
@@ -109,8 +156,8 @@ creature.ready(function () {
 
 ## Some conventions
 
-* The remote method naming convention is `on`+name example: `Blog.prototype.oncreate`.
-* Names should be lowercase so use `Blog.prototype.onupdate` instead of `Blog.prototype.onUpdate`.
+* The remote method naming convention is `on`+name example: `blog.oncreate`.
+* Names should be lowercase so use `blog.onupdate` instead of `blog.onUpdate`.
 * Call method on the client side without the `on` so for calling the previous method do `blog.update(data, fn)`.
 
 ## Run tests
