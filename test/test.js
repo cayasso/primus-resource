@@ -29,6 +29,7 @@ describe('primus-resource', function (){
     try {
       primus.resource('creature');
     } catch (e) {
+      expect(e).to.be.an(Error);
       return expect(e.message).to.contain('primus-multiplex');
     }
 
@@ -44,6 +45,7 @@ describe('primus-resource', function (){
     try {
       primus.resource('creature');
     } catch (e) {
+      expect(e).to.be.an(Error);
       return expect(e.message).to.contain('primus-emitter');
     }
 
@@ -61,41 +63,78 @@ describe('primus-resource', function (){
     });
   });
 
-  it('should return a constructor function', function (){
+  it('should have a resource name', function(){
     var srv = http();
     var primus = server(srv, opts);
-    var Creature = primus.resource('creature');
-    expect(Creature).to.be.a(Function);
+    var creature = primus.resource('creature');
+    expect(creature.resourceName).to.be('creature');
+  });
+
+  it('should throw error when no resource name is passed', function(){
+    var srv = http();
+    var primus = server(srv, opts);
+
+    try {
+      primus.resource('creature');
+    } catch (e) {
+      expect(e).to.be.an(Error);
+      return expect(e.message).to.contain('specified with a name');
+    }
+  });
+
+  it('should throw error if invalid resource type is pased', function(){
+    var srv = http();
+    var primus = server(srv, opts);
+
+    try {
+      primus.resource('creature', 'a');
+    } catch (e) {
+      expect(e).to.be.an(Error);
+      expect(e.message).to.contain('Object');
+      expect(e.message).to.contain('Function');
+    }
+  });
+
+  it('should return an object', function (){
+    var srv = http();
+    var primus = server(srv, opts);
+    var creature = primus.resource('creature');
+    expect(creature).to.be.an(Object);
+    creature = primus.resource('creature', {});
+    expect(creature).to.be.an(Object);
+  });
+
+  it('should return a Function if function is passed', function (){
+    var srv = http();
+    var primus = server(srv, opts);
+    var creature = primus.resource('creature', function(){});
+    expect(creature).to.be.an(Function);
   });
 
   it('should fire ready event', function(done){
     var srv = http();
     var primus = server(srv, opts);
-    
-
     srv.listen(function(){
-      var Creature = primus.resource('creature');
-      new Creature();
+      var creature = primus.resource('creature');
     });
-
     var cl = client(srv, primus);
     var creature = cl.resource('creature');
-
     creature.ready(done);
-    
   });
 
   it('should bind and receive remote events', function(done){
     var srv = http();
     var primus = server(srv, opts);
-    var Creature = primus.resource('creature');
 
-    Creature.prototype.onfetch = function () {
+    function Creature(){}
+
+    Creature.prototype.onfetch = function (spark, data) {
+      expect(data).to.be('hi');
       done();
     };
 
     srv.listen(function(){
-      var creature = new Creature();
+      primus.resource('creature', new Creature());
     });
 
     var cl = client(srv, primus);
@@ -107,17 +146,37 @@ describe('primus-resource', function (){
 
   });
 
+  it('should allow getting a resource for binding events', function(done){
+    var srv = http();
+    var primus = server(srv, opts);
+
+    srv.listen(function(){
+      var Creature = primus.resource('creature');
+      Creature.onfetch = function (spark, data) {
+        expect(data).to.be('hi');
+        done();
+      };
+    });
+
+    var cl = client(srv, primus);
+    var creature = cl.resource('creature');
+    creature.ready(function(){
+      creature.fetch('hi');
+    });
+
+  });
+
   it('first argument of binded event should be the Spark', function(done){
     var srv = http();
     var primus = server(srv, opts);
-    var Creature = primus.resource('creature');
-    Creature.prototype.onfetch = function (spark, hi) {
+    function Creature() {}
+    Creature.prototype.onfetch = function (spark, data) {
       expect(spark).to.be.a(primus.$.Multiplex.Spark);
-      expect(hi).to.be('hi');
+      expect(data).to.be('hi');
       done();
     };
     srv.listen(function(){
-      var creature = new Creature();
+      primus.resource('creature', new Creature());
     });
     var cl = client(srv, primus);
     var creature = cl.resource('creature');
@@ -129,34 +188,18 @@ describe('primus-resource', function (){
   it('should expose channel in resource instance', function(done){
     var srv = http();
     var primus = server(srv, opts);
-    var Creature = primus.resource('creature');
+    function Creature() {}
     Creature.prototype.onfetch = function (spark, hi) {
       expect(this.channel).to.be.a(primus.$.Multiplex.Channel);
       done();
     };
     srv.listen(function () {
-      var creature = new Creature();
+      primus.resource('creature', new Creature());
     });
     var cl = client(srv, primus);
     var creature = cl.resource('creature');
     creature.ready(function(){
       creature.fetch('hi');
-    });
-  });
-
-  it('should have a resource name', function(done){
-    var srv = http();
-    var primus = server(srv, opts);
-    var Creature = primus.resource('creature');
-
-    Creature.prototype.onfetch = function (spark, hi) {
-      expect(this.channel).to.be.a(primus.$.Multiplex.Channel);
-      done();
-    };
-    srv.listen(function(){
-      var creature = new Creature();
-      expect(creature.resourceName).to.be('creature');
-      done();
     });
   });
 
