@@ -1,5 +1,3 @@
-## Warning: this module is still in early development and API will change, consider it stable when this warning does not appear anymore :-)
-
 # Primus Resource
 
 [![Build Status](https://travis-ci.org/cayasso/primus-resource.png?branch=master)](https://travis-ci.org/cayasso/primus-resource)
