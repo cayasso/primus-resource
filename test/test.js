@@ -5,10 +5,10 @@ var expect = require('expect.js');
 var opts = { transformer: 'websockets', parser: 'JSON' };
 
 // creates the client
-function client(srv, primus, port){
+function client(srv, primus, port, op){
   var addr = srv.address();
   var url = 'http://' + addr.address + ':' + (port || addr.port);
-  return new primus.Socket(url);
+  return new primus.Socket(url, op);
 }
 
 // creates the server
@@ -119,7 +119,10 @@ describe('primus-resource', function (){
     });
     var cl = client(srv, primus);
     var creature = cl.resource('creature');
-    creature.ready(done);
+    creature.on('ready', function () {
+      done();
+    });
+    //creature.ready(done);
   });
 
   it('should bind and receive remote events', function(done){
@@ -140,7 +143,7 @@ describe('primus-resource', function (){
     var cl = client(srv, primus);
     var creature = cl.resource('creature');
 
-    creature.ready(function(){
+    creature.on('ready', function () {
       creature.fetch('hi');
     });
 
@@ -160,7 +163,8 @@ describe('primus-resource', function (){
 
     var cl = client(srv, primus);
     var creature = cl.resource('creature');
-    creature.ready(function(){
+
+    creature.on('ready', function () {
       creature.fetch('hi');
     });
 
@@ -169,9 +173,9 @@ describe('primus-resource', function (){
   it('first argument of binded event should be the Spark', function(done){
     var srv = http();
     var primus = server(srv, opts);
-    function Creature() {}
+    function Creature() {}    
     Creature.prototype.onfetch = function (spark, data) {
-      expect(spark).to.be.a(primus.$.Multiplex.Spark);
+      expect(spark).to.be.a(require('primus-multiplex').multiplex.server.Spark);
       expect(data).to.be('hi');
       done();
     };
@@ -180,7 +184,7 @@ describe('primus-resource', function (){
     });
     var cl = client(srv, primus);
     var creature = cl.resource('creature');
-    creature.ready(function(){
+    creature.on('ready', function () {
       creature.fetch('hi');
     });
   });
@@ -190,7 +194,7 @@ describe('primus-resource', function (){
     var primus = server(srv, opts);
     function Creature() {}
     Creature.prototype.onfetch = function (spark, hi) {
-      expect(this.channel).to.be.a(primus.$.Multiplex.Channel);
+      expect(this.channel).to.be.a(require('primus-multiplex').multiplex.server.Channel);
       done();
     };
     srv.listen(function () {
@@ -198,7 +202,27 @@ describe('primus-resource', function (){
     });
     var cl = client(srv, primus);
     var creature = cl.resource('creature');
-    creature.ready(function(){
+    creature.on('ready', function () {
+      creature.fetch('hi');
+    });
+  });
+
+  it('should allow disabling multiplexing', function(done){
+    var srv = http();
+    var primus = server(srv, opts);
+    function Creature() {}
+    Creature.prototype.onfetch = function (spark, data) {
+      expect(spark).to.be.a(primus.Spark);
+      expect(this.channel).to.be.a(Primus);
+      expect(data).to.be('hi');
+      done();
+    };
+    srv.listen(function(){
+      primus.resource('creature', new Creature(), false);
+    });
+    var cl = client(srv, primus);
+    var creature = cl.resource('creature', false);
+    creature.on('ready', function () {
       creature.fetch('hi');
     });
   });
