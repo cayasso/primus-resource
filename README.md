@@ -137,7 +137,7 @@ var primus = Primus.connect('ws://localhost:8080');
 var creature = primus.resource('creature');
 
 // wait until resource is ready
-creature.ready(function () {
+creature.on('ready', function () {
   
   // start calling remote events
   creature.command('sleep', function (res) {
