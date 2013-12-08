@@ -29,7 +29,6 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "load": "1.0.x"
   },
   "devDependencies": {
     "mocha": "*",

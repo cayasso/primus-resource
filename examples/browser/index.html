@@ -24,9 +24,15 @@
 
     // blog resource
     blog.on('ready', function () {
+
       blog.post({ id: 123456, title: 'My first post'}, function (res) {
         console.log(res);
       });
+
+      blog.on('hola', function () {
+        console.log('HOOOOOOOOOOOOOLA', arguments);
+      });
+
     });
     
   </script>

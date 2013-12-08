@@ -32,7 +32,19 @@ Blog.prototype.onpost = function (spark, data, fn) {
   fn('Post created');
 };
 
-primus.resource('blog', new Blog('My blog'));
+var blog = new Blog('My blog');
+
+
+
+/*blog.on('hoola', function () {
+  console.log('SALUDOS');
+});*/
+
+primus.resource('blog', blog);
+
+//setTimeout(function () {
+  blog.broadcast('hola', 'tata');
+//}, 10000);
 
 // Start server listening
 server.listen(process.env.PORT || 8081, function(){
