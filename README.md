@@ -7,6 +7,26 @@ Define resources with auto-binded methods that can be called remotely on top of 
 
 Method on an object prototype in the form of `on` + method, like `onupdate` will be automatically binded as an `event` on all incoming `sparks`, then the event can be called remotely by the client by just invoking the method name without the `on` like `update`.
 
+### Important
+
+As of version 2.x.x the `ready` method is no longer supported, please use the `ready` event for making sure resource is ready for start using.
+
+So instead of:
+
+```javascript
+resource.ready(function () {
+   // do something 
+});
+```
+
+use:
+
+```javascript
+resource.on('ready', function () {
+   // do something 
+});
+```
+
 ## Instalation
 
 ```bash
