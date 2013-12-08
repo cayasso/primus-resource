@@ -9,7 +9,7 @@ Method on an object prototype in the form of `on` + method, like `onupdate` will
 
 ### Important
 
-As of version 2.x.x the `ready` method is no longer supported, please use the `ready` event for making sure resource is ready for start using.
+As of version 2.x.x the `ready` method is no longer supported, please use the `ready` event.
 
 So instead of:
 
@@ -19,7 +19,7 @@ resource.ready(function () {
 });
 ```
 
-use:
+Use:
 
 ```javascript
 resource.on('ready', function () {
