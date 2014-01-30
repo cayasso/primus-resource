@@ -35,7 +35,7 @@ describe('primus-resource', function (){
 
     throw new Error('I should have throwed above');
   });
-
+  
   it('should throw error if `primus-emitter` is missing', function (){
     var srv = http();
     var primus = Primus(srv, opts)    
@@ -225,6 +225,14 @@ describe('primus-resource', function (){
     creature.on('ready', function () {
       creature.fetch('hi');
     });
+  });
+
+  it('should not throw error if multiplex is off and primus-multiplex is missing', function (){
+    var srv = http();
+    var primus = Primus(srv, opts)
+    .use('emitter', 'primus-emitter')
+    .use('resource', resource);
+    primus.resource('creature', {}, false);
   });
 
 });

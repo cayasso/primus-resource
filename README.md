@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/cayasso/primus-resource.png?branch=master)](https://travis-ci.org/cayasso/primus-resource)
 [![NPM version](https://badge.fury.io/js/primus-resource.png)](http://badge.fury.io/js/primus-resource)
 
-Define resources with auto-binded methods that can be called remotely on top of [Primus](https://github.com/3rd-Eden/primus). This plugin depends on `primus-multiplex` and `primus-emitter`.
+Define resources with auto-binded methods that can be called remotely on top of [Primus](https://github.com/3rd-Eden/primus). This plugin depends on `primus-multiplex` and `primus-emitter` however if you disable multiplexing then you can omit installing `primus-multiplex`.
 
 Method on an object prototype in the form of `on` + method, like `onupdate` will be automatically binded as an `event` on all incoming `sparks`, then the event can be called remotely by the client by just invoking the method name without the `on` like `update`.
 
@@ -170,6 +170,22 @@ creature.on('ready', function () {
   });
 
 });
+```
+
+## Disabling multiplex
+
+You can always disable multiplexing by passing a `false` as the last parameter on the server and on the client, this is required on both sides. If you disable multiplexing you can omit installing `primus-multiplex`.
+
+On the server:
+
+```javascript
+primus.resource('creature', Creature, false);
+```
+
+On the client:
+
+```javascript
+primus.resource('creature', false);
 ```
 
 ## Some conventions
