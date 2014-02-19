@@ -34,8 +34,8 @@
     "mocha": "*",
     "expect.js": "*",
     "ws": "~0.4.27",
-    "primus": "~1.x.x",
-    "primus-multiplex": "2.x.x",
-    "primus-emitter": "2.x.x"
+    "primus": "~2.x",
+    "primus-multiplex": "~3.x",
+    "primus-emitter": "~3.x"
   }
 }
