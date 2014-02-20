@@ -1,6 +1,6 @@
 {
   "name": "primus-resource",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Define resources with auto-binded methods that can be called remotely on top of Primus.",
   "author": "Jonathan Brumley <cayasso@gmail.com>",
   "homepage": "https://github.com/cayasso/primus-resource",
@@ -34,8 +34,8 @@
     "mocha": "*",
     "expect.js": "*",
     "ws": "~0.4.27",
-    "primus": "~2.x",
-    "primus-multiplex": "~3.x",
-    "primus-emitter": "~3.x"
+    "primus": "~2.x.x",
+    "primus-multiplex": "~3.x.x",
+    "primus-emitter": "~3.x.x"
   }
 }
