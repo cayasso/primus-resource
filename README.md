@@ -8,7 +8,7 @@ Define resources with auto-binded methods that can be called remotely on top of 
 Method on an object prototype in the form of `on` + method, like `onupdate` will be automatically binded as an `event` on all incoming `sparks`, then the event can be called remotely by the client by just invoking the method name without the `on` like `update`.
 
 ## Compatibility
-####This project is currently compatible with the 1.+ versions of Primus, it is not compatible with the latest [2.0.+ release](https://github.com/primus/primus/releases/tag/2.0.0), changes are in the works for getting all plugins aligned with the latest Primus. Stay tuned!!!####
+This plugin works with any Primus version, just make sure the `primus-emitter` or `primus-multiplex` are compatible with the primus version you are using.
 
 ## Instalation
 
