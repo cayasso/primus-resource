@@ -122,7 +122,6 @@ describe('primus-resource', function (){
     creature.on('ready', function () {
       done();
     });
-    //creature.ready(done);
   });
 
   it('should bind and receive remote events', function(done){
@@ -181,12 +180,14 @@ describe('primus-resource', function (){
     };
     srv.listen(function(){
       primus.resource('creature', new Creature());
+
+      var cl = client(srv, primus);
+      var creature = cl.resource('creature');
+      creature.on('ready', function () {
+        creature.fetch('hi');
+      });
     });
-    var cl = client(srv, primus);
-    var creature = cl.resource('creature');
-    creature.on('ready', function () {
-      creature.fetch('hi');
-    });
+    
   });
 
   it('should expose channel in resource instance', function(done){
