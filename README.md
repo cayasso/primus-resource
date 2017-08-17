@@ -155,6 +155,35 @@ creature.on('ready', function () {
 });
 ```
 
+It is possible to define a `timeout` either globally or local to each callback, together with a corresponding `timeoutVal` value. The callback is then invoked with the local value or if not set the global value (default: no callback invoked on timeout):
+
+```javascript
+var primus = Primus.connect('ws://localhost:8080');
+
+// connect to resource
+var creature = primus.resource('creature');
+creature.timeout = 5000;  // global default timeout, associated value is the undefined value
+
+// wait until resource is ready
+creature.on('ready', function () {
+  
+  // start calling remote events
+  creature.command('sleep', function (res) {
+    console.log(res);
+  });
+
+  // call the server remote walk event
+  var cbWalk = function (res) {
+    console.log(res);
+  };
+  cbWalk.timeout = 1;  // this should time out quickly
+  cbWalk.timeoutVal = 'timeout';
+  creature.walk(cbWalk);
+
+});
+```
+
+
 ## Disabling multiplex
 
 You can always disable multiplexing by passing a `false` as the last parameter on the server and on the client, this is required on both sides. If you disable multiplexing you can omit installing `primus-multiplex`.

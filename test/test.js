@@ -236,4 +236,37 @@ describe('primus-resource', function (){
     primus.resource('creature', {}, false);
   });
 
+  it('should be able to enforce timeouts', function(done){
+    var srv = http();
+    var primus = server(srv, opts);
+
+    function Creature(){}
+
+    Creature.prototype.onfetch = function (spark, respond, fn) {
+      if (respond) fn('reply'); 
+    };
+
+    srv.listen(function(){
+      primus.resource('creature', new Creature());
+    });
+
+    var cl = client(srv, primus);
+    var creature = cl.resource('creature');
+
+    creature.on('ready', function () {
+      creature.timeout = 5000;  // over test framework timeout, would fail test
+      creature.timeoutVal = 'timeout2';
+      creature.fetch(true, (data) => {
+        expect(data).to.be('reply');
+        const cb = (data) => {
+          expect(data).to.be('timeout');
+          done();
+        };
+        cb.timeout = 500;
+        cb.timeoutVal = 'timeout';
+        creature.fetch(false, cb);
+      });
+    });
+  });
+  
 });
