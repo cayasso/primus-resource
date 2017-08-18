@@ -208,7 +208,7 @@ creature.on('ready', function () {
   creature.walk().then((res) => {
     console.log(res);
   }).catch(() => {
-    console.log('did not start walking in time!);
+    console.log('did not start walking in time!');
   });
 
 });
