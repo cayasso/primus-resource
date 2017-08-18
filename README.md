@@ -181,11 +181,11 @@ creature.on('ready', function () {
 });
 ```
 
-#### Timeouts
+#### Server errors and timeouts
 
-Next to being the current standard for asynchronous operations, Promises are useful in combination with timeout handling: it is possible to define a `timeout` either globally on the resource or local to each resource method (the latter having precedence). In case of timeout (no return value / acknowledgement from server) the promise will reject with the reason `'timeout'`.
-Timeout are optional, by default the Promise will never reject.
-Timeout handling only works with Promises.
+Next to being the current standard for asynchronous operations, Promises are useful for handling server exceptions:
+* the server can reply with the NULL *character* `'\0'` to indicate that an error occurred and no actual result will be provided. This will cause the promise to reject with the reason `'error'`.
+* it is also possible to define a `timeout` (in milliseconds) either globally on the resource or local to each resource method (the latter having precedence). In case of timeout (no return value / acknowledgement from server) the promise will reject with the reason `'timeout'`. Timeouts only work with Promises and are optional.
 
 
 ```javascript
