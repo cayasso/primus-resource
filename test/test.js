@@ -236,4 +236,65 @@ describe('primus-resource', function (){
     primus.resource('creature', {}, false);
   });
 
+  it('should be able to enforce timeouts', function(done){
+    var srv = http();
+    var primus = server(srv, opts);
+
+    function Creature(){}
+    Creature.prototype.onfetch = function (spark, respond, fn) {
+      if (respond) fn('reply'); 
+    };
+    srv.listen(function(){
+      primus.resource('creature', new Creature());
+    });
+
+    var cl = client(srv, primus);
+    var creature = cl.resource('creature');
+    creature.on('ready', function () {
+      creature.timeout = 5000;  // over test framework timeout, would fail test
+      creature.fetch(true).then(function(data) {
+        expect(data).to.be('reply');
+        creature.fetch.timeout = 500;
+        creature.fetch(false).then(function(data) {
+          expect().fail('did not time out as expected');
+        }).catch(function(reason) {
+          if (typeof reason === 'string') {
+            expect(reason).to.be('timeout');
+            done();
+          } else {
+            throw reason;
+          }
+        });
+      });
+    });
+  });
+  
+  it('Promise should reject on undefined reply', function(done){
+    var srv = http();
+    var primus = server(srv, opts);
+
+    function Creature(){}
+    Creature.prototype.onfetch = function (spark, fn) {
+      fn('\0error');
+    };
+    srv.listen(function(){
+      primus.resource('creature', new Creature());
+    });
+
+    var cl = client(srv, primus);
+    var creature = cl.resource('creature');
+    creature.on('ready', function () {
+      creature.fetch().then(function(res) {
+        expect().fail('did not reject as expected');
+      }).catch(function(reason) {
+        if (typeof reason === 'string') {
+          expect(reason).to.be('error');
+          done();
+        } else {
+          throw reason;
+        }
+      });
+    });
+  });
+  
 });
