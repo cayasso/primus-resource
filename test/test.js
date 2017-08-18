@@ -255,16 +255,15 @@ describe('primus-resource', function (){
 
     creature.on('ready', function () {
       creature.timeout = 5000;  // over test framework timeout, would fail test
-      creature.timeoutVal = 'timeout2';
-      creature.fetch(true, (data) => {
+      creature.fetch(true).then((data) => {
         expect(data).to.be('reply');
-        const cb = (data) => {
-          expect(data).to.be('timeout');
+        creature.fetch.timeout = 500;
+        creature.fetch(false).then((data) => {
+          expect().fail('did not time out as expected');
+        }).catch((reason) => {
+          expect(reason).to.be('timeout');
           done();
-        };
-        cb.timeout = 500;
-        cb.timeoutVal = 'timeout';
-        creature.fetch(false, cb);
+        });
       });
     });
   });

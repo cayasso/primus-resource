@@ -155,30 +155,61 @@ creature.on('ready', function () {
 });
 ```
 
-It is possible to define a `timeout` either globally or local to each callback, together with a corresponding `timeoutVal` value. The callback is then invoked with the local value or if not set the global value (default: no callback invoked on timeout):
+#### Promises
+
+Nowadays (August 2017) Promises are very well supported. If no callback is provided when invoking a resource method, a promise will be returned. The example above can be rewritten as:
+  
+```javascript
+var primus = Primus.connect('ws://localhost:8080');
+
+// connect to resource
+var creature = primus.resource('creature');
+
+// wait until resource is ready
+creature.on('ready', function () {
+  
+  // start calling remote events
+  creature.command('sleep').then(function (res) {
+    console.log(res);
+  });
+
+  // call the server remote walk event
+  creature.walk().then(function (res) {
+    console.log(res);
+  });
+
+});
+```
+
+#### Timeouts
+
+Next to being the current standard for asynchronous operations, Promises are useful in combination with timeout handling: it is possible to define a `timeout` either globally on the resource or local to each resource method (the latter having precedence). In case of timeout (no return value / acknowledgement from server) the promise will reject with the reason `'timeout'`.
+Timeout are optional, by default the Promise will never reject.
+Timeout handling only works with Promises.
+
 
 ```javascript
 var primus = Primus.connect('ws://localhost:8080');
 
 // connect to resource
 var creature = primus.resource('creature');
-creature.timeout = 5000;  // global default timeout, associated value is the undefined value
+creature.timeout = 5000;  // global default timeout, will apply to sleep
 
 // wait until resource is ready
 creature.on('ready', function () {
+  creature.walk.timeout = 1;  // specific timeout for the 'walk' method
   
   // start calling remote events
-  creature.command('sleep', function (res) {
+  creature.command('sleep').then(function (res) {
     console.log(res);
   });
 
   // call the server remote walk event
-  var cbWalk = function (res) {
+  creature.walk().then((res) => {
     console.log(res);
-  };
-  cbWalk.timeout = 1;  // this should time out quickly
-  cbWalk.timeoutVal = 'timeout';
-  creature.walk(cbWalk);
+  }).catch(() => {
+    console.log('did not start walking in time!);
+  });
 
 });
 ```
