@@ -275,7 +275,7 @@ describe('primus-resource', function (){
 
     function Creature(){}
     Creature.prototype.onfetch = function (spark, fn) {
-      fn('\0');
+      fn('\0error');
     };
     srv.listen(function(){
       primus.resource('creature', new Creature());
